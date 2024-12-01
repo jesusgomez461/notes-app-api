@@ -1,0 +1,54 @@
+# Archivos y carpetas de entornos virtuales
+venv/
+.env/
+
+# Archivos de configuración de entorno
+*.env
+
+# Archivos de compilación de Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Archivos de logs
+*.log
+*.out
+*.err
+
+# Archivos de base de datos local
+*.sqlite3
+*.db
+
+# Archivos de migraciones generadas por herramientas como Alembic
+alembic/versions/*
+
+# Archivos de paquetes instalados
+*.egg-info/
+*.eggs/
+dist/
+build/
+
+# Archivos y carpetas específicos de herramientas de desarrollo
+.idea/
+.vscode/
+*.swp
+
+# Archivos de prueba o cobertura
+.coverage
+.tox/
+.nox/
+pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Archivos creados por sistemas operativos
+.DS_Store
+Thumbs.db
+
+# Llaves y credenciales sensibles
+*.pem
+*.key
