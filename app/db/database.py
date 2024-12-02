@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
 import os
 
@@ -8,25 +8,24 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
-    print("Error: No se cargó la URL de la base de datos desde el archivo "
-          ".env")
+    print("Error: Failed to load database URL from .env file")
 DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
-# Crear el motor asincrónico
+# DOC: Create the asynchronous motor
 engine = create_async_engine(DATABASE_URL, echo=True)
 
-# Crear la sesión asincrónica
+# DOC: Create asynchronous session
 async_session = sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False
 )
 
-# Base para los modelos
+# DOC: Basis for models
 Base = declarative_base()
 
 
-# Dependencia para obtener la sesión de base de datos
+# DOC: Dependency to obtain database session
 async def get_db():
     async with async_session() as session:
         yield session

@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy.orm import relationship
 
 
+# DOC: user model for the database
 class User(Base):
     __tablename__ = "users"
 
@@ -14,5 +15,5 @@ class User(Base):
     password = Column(String(200), nullable=False)
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # DOC: Relación con las notas
+    # DOC: Relationship with the notes table
     notes = relationship("Note", back_populates="owner")

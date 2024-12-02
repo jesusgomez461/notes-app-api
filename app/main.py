@@ -1,42 +1,32 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from app.db.database import engine
-from app.models import (
-    Base
-)
-from app.routers import auth, notes  # Importa tus routers
+from app.models import Base
+from app.routers import auth, notes
 import uvicorn
 
-# Instancia de la aplicación FastAPI
-app = FastAPI(
-    title="Notes App",
-    description="API para gestionar usuarios y notas",
-    version="1.0.0",
-)
 
-
-# Evento de inicio para crear las tablas
-@app.on_event("startup")
-async def startup():
-    # Crear las tablas si no existen
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # DOC: Start event: Create tables if it does not exist
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
-
-# Evento de apagado para cerrar el motor de la base de datos
-@app.on_event("shutdown")
-async def shutdown():
+    yield
+    # DOC: Shutdown event: Shut down database engine
     await engine.dispose()
 
-# Registrar los routers
+# DOC: FastAPI application instance with lifecycle handler
+app = FastAPI(
+    title="Notes App",
+    description="API para agregar notas por usuario",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+# DOC: Register routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(notes.router, prefix="/api/notes", tags=["Notes"])
 
-
-# Ruta raíz (opcional)
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Notes App API"}
-
-# Inicia el servidor si se ejecuta directamente
+# DOC: Starts the server
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)

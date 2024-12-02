@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy.orm import relationship
 
 
+# DOC: Note model for the database
 class Note(Base):
     __tablename__ = "notes"
 
@@ -13,5 +14,5 @@ class Note(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # DOC: Relación con el usuario propietario
+    # DOC: Relationship with the users table
     owner = relationship("User", back_populates="notes")
