@@ -17,3 +17,4 @@ class User(Base):
 
     # DOC: Relationship with the notes table
     notes = relationship("Note", back_populates="owner")
+    categories = relationship("Category", back_populates="user")

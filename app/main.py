@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.db.database import engine
 from app.models import Base
-from app.routers import auth, notes
+from app.routers import auth, notes, categories, notesHistory
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -23,9 +24,28 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# DOC: Middleware to allow CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # DOC: Allow only this origin
+    allow_credentials=True,
+    allow_methods=["*"],  # DOC: Allow all methods
+    allow_headers=["*"],  # DOC: Allow all headers
+)
+
 # DOC: Register routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(notes.router, prefix="/api/notes", tags=["Notes"])
+app.include_router(
+    categories.router,
+    prefix="/api/categories",
+    tags=["Categories"]
+)
+app.include_router(
+    notesHistory.router,
+    prefix="/api/notes-history",
+    tags=["NotesHistory"]
+)
 
 # DOC: Starts the server
 if __name__ == "__main__":

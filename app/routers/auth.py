@@ -27,7 +27,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
     if not token_data:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="invalidCredentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
     return token_data
@@ -49,5 +49,5 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     """
     existing_user = await get_user_by_email(db, email=user.email)
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="emailAlreadyRegistered")
     return await create_user(db, user)
